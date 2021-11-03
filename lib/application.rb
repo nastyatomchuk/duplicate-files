@@ -1,11 +1,13 @@
 class Application
-  def initialize
-    @dir = __dir__ + "/data/"
-    @arr= Dir.entries(@dir)
+  attr_reader :dir_path, :file_names
+
+  def initialize(dir_path)
+    @dir_path = dir_path
+    @files_array = Dir.entries(@dir_path)
   end
 
-  def self.start
-    new.start
+  def self.start(dir_path)
+    new(dir_path).start
   end
 
   def start
@@ -15,48 +17,44 @@ class Application
   end
 
   def count_files
-    puts "Кол-во файлов в каталоге:"
-    puts Dir[File.join(@dir, '**', '*')].count { |file| File.file?(file) }
+    puts "\nКол-во файлов в каталоге: #{ Dir[File.join(@dir_path, '**', '*')].count { |file| File.file?(file) }}"
   end
 
   def all_files
-    puts "Вывод всех файлов каталога:"
-    puts @arr
+    puts "\nВывод всех файлов каталога: #{@files_array}"
   end
 
   def find_duplications
-    puts "Поиск совпадений:"
+    puts "\nПоиск совпадений:"
     array = []
-    (i=2..@arr.size-1).each { |i|
-      st = @dir + @arr[i]
-      im1 = File.read(st)
+    (i = 2..@files_array.size - 1).each { |i|
+      st = @dir_path + "/" + @files_array[i]
       grades = Hash.new(0)
-      grades[st] = im1
+      grades[st] = File.read(st)
       array.push(grades)
     }
-    (i = 0..array.size-1).each { |i|
+      (i = 0..array.size - 1).each { |i|
       count_duplications = 0
-      b = (( array[i].to_a)[0])[1]
+      b = ((array[i].to_a)[0])[1]
 
-      (j = 0..array.size-1).each { |j|
+      (j = 0..array.size - 1).each { |j|
         b1 = ((array[j].to_a)[0])[1]
-        if  b == b1 and i!=j
-          count_duplications = count_duplications+1
+        if  b == b1 and i != j
+          count_duplications += 1
         end
       }
       if count_duplications == 0
-        puts "Файл " +  ((array[i].to_a)[0])[0].to_s + " не имеет совпадений"
+        puts "\nФайл #{ ((array[i].to_a)[0])[0] } не имеет совпадений"
       else
-        puts "Файл " + ((array[i].to_a)[0])[0].to_s + " имеет совпадений " + count_duplications.to_s
-        newArr=[]
-        (k=0..array.size-1).each { |k|
+        puts "\nФайл #{ ((array[i].to_a)[0])[0] } имеет совпадений #{ count_duplications.to_s }"
+        new_arr = []
+        (k = 0..array.size - 1).each { |k|
           b1 = ((array[k].to_a)[0])[1]
-          if   b == b1  and i!=k
-            newArr.push((((array[k].to_a)[0])[0]))
+          if   b == b1  and i != k
+            new_arr.push ((array[k].to_a)[0])[0]
           end
         }
-        puts "Дубликаты: "
-        puts  newArr
+        puts "Дубликаты: #{ new_arr }"
       end
     }
   end
