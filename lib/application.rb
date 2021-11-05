@@ -1,34 +1,33 @@
 class Application
-  attr_reader :dir_path, :file_names
+  attr_reader :data_path, :files_name
 
-  def initialize(dir_path)
-    @dir_path = dir_path
-    @files_array = Dir.entries(@dir_path)
+  def initialize(data_path)
+    @data_path = data_path
+    @files_name = Dir.entries(data_path)
   end
 
-  def self.start(dir_path)
-    new(dir_path).start
+  def self.start(data_path)
+    new(data_path).start
   end
 
   def start
-    count_files
-    all_files
+    print_count_of_files
     find_duplications
   end
 
-  def count_files
-    puts "\nКол-во файлов в каталоге: #{ Dir[File.join(@dir_path, '**', '*')].count { |file| File.file?(file) }}"
+  def print_count_of_files
+    puts "Кол-во файлов в каталоге: #{ count_files }"
   end
 
-  def all_files
-    puts "\nВывод всех файлов каталога: #{@files_array}"
+  def count_files
+    Dir[File.join(data_path, '**', '*')].count { |file| File.file?(file) }
   end
 
   def find_duplications
     puts "\nПоиск совпадений:"
     array = []
-    (i = 2..@files_array.size - 1).each { |i|
-      st = @dir_path + "/" + @files_array[i]
+    (i = 2..files_name.size - 1).each { |i|
+      st = data_path + "/" + files_name[i]
       grades = Hash.new(0)
       grades[st] = File.read(st)
       array.push(grades)
