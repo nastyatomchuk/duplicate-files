@@ -1,9 +1,13 @@
 #! /usr/bin/env ruby
 
 $LOAD_PATH.unshift File.expand_path('lib', __dir__)
-require 'application.rb'
+require 'application'
 require 'sha1_digester'
+require 'duplicated_files_registry'
+require 'duplicated_files_report_us'
+require 'duplicated_files_report_ru'
 
 data_path = File.expand_path('data', __dir__)
 digester = Sha1Digester.new
-Application.start(data_path, digester)
+report = DuplicatedFilesReportRu.new
+Application.start(data_path, digester, report)
