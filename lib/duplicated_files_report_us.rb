@@ -1,8 +1,8 @@
 require 'colorize'
 
-class DuplicatedFilesReportRu
+class DuplicatedFilesReportUS
   def print_report(grouped_file_names)
-    puts "Duplicates:".colorize(:green)
+    puts "Dile duplicate report (duplicates are grouped line by line)".colorize(:green)
     grouped_file_names.each_value do |file_name|
       puts file_name.join(', ').colorize(:white)
     end
